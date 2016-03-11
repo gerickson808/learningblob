@@ -170,6 +170,17 @@ function applyGravity(grav){
 // 	moveHurdles();
 // },40);
 
+function getState() {
+	// isJumping, distnace from next obstacle, obstacle type
+	
+
+}
+
+function getReward(action, state) {
+	// body...
+}
+
+
 function runBrain() {
 	var state = getState();
 	var action = brain.forward(state);
@@ -177,7 +188,7 @@ function runBrain() {
 	brain.backward(reward);
 
 	// do action
-	
+
 }
 
 canvas.setLoop(function(){
