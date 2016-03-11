@@ -1,6 +1,6 @@
-// var num_inputs = 27; // 9 eyes, each sees 3 numbers (wall, green, red thing proximity)
-// var num_actions = 5; // 5 possible angles agent can turn
-var temporal_window = 1; // amount of temporal memory. 0 = agent lives in-the-moment :)
+var num_inputs = 2; // 9 eyes, each sees 3 numbers (wall, green, red thing proximity)
+ var num_actions = 2; // 5 possible angles agent can turn
+var temporal_window = 100; // amount of temporal memory. 0 = agent lives in-the-moment :)
 var network_size = num_inputs*temporal_window + num_actions*temporal_window + num_inputs;
 
 // the value function network computes a value of taking any of the possible actions
@@ -31,4 +31,3 @@ opt.tdtrainer_options = tdtrainer_options;
 
 //////////////
 
-var brain = new deepqlearn.Brain(3, 3, opt);

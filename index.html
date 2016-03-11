@@ -1,14 +1,20 @@
 <html>
 	<head><title>Learning blob</title></head>
 	<body>
-		<div id="scoreBox" style="height:3em;width:10em;border:'2px solid black';position:fixed;top:5em;left:10em;z-index:1000"></div>
+
+		<div id="stuff" style="height:3em;width:10em;border:'2px solid black'"><button onclick="toggleLearning()">Toggle Learning</button><button onclick="realTime()">Realtime</button><button onclick="fastLearning()">Fast as shit</button>
+		<button onclick="saveBrain()">Console log that network, bruh</button></div>
 		<canvas id="canvas" style="z-index:0"></canvas>
+		<div id="info"></div>
 	</body>
+	<!-- Libraries -->
+	<script type="text/javascript" src="./node_modules/convnetjs/build/convnet.js"></script>
+	<script type="text/javascript" src="./node_modules/convnetjs/build/deepqlearn.js"></script>
+	<script type="text/javascript" src="./node_modules/convnetjs/build/util.js"></script>
+	<script type="text/javascript" src="./node_modules/convnetjs/build/vis.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/ocanvas/2.8.3/ocanvas.min.js"></script>
-	<script src="./learningblob.js"></script>
+
+	<!-- Our JS -->
 	<script type="text/javascript" src="./brain.js"></script>
-	<script type="text/javascript" src="./node_modules/convnetjs/convnet.js"></script>
-	<script type="text/javascript" src="./node_modules/convnetjs/deepqlearn.js"></script>
-	<script type="text/javascript" src="./node_modules/convnetjs/util.js"></script>
-	<script type="text/javascript" src="./node_modules/convnetjs/vis.js"></script>
+	<script src="./learningblob.js"></script>
 </html>
