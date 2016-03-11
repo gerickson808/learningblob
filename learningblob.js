@@ -18,9 +18,9 @@ document.getElementById('canvas').onmousedown = function(){
 canvas = oCanvas.create({
 	canvas: 'canvas',
 	background:'#3cf',
-	clearEachFrame: false,
-	drawEachFrame: false,
-	fps:1,
+	clearEachFrame: true,
+	drawEachFrame: true,
+	fps:60,
 	disableScrolling:true
 });
 
@@ -160,16 +160,26 @@ function applyGravity(grav){
 	if(hero.y < heroFloor) hero.velY += grav;
 }
 
-setInterval(function(){
-	applyGravity(gravity);
-	moveHero();
-	generateHurdles();
-	moveHurdles();
-},1);
-
-// canvas.setLoop(function(){
+// setInterval(function(){
 // 	applyGravity(gravity);
 // 	moveHero();
 // 	generateHurdles();
 // 	moveHurdles();
-// }).start();
+// },40);
+
+function runBrain() {
+	var state = getState();
+	var action = brain.forward(state);
+	var reward = getReward(action, state);
+	brain.backward(reward);
+
+	// do action
+	
+}
+
+canvas.setLoop(function(){
+	applyGravity(gravity);
+	moveHero();
+	generateHurdles();
+	moveHurdles();
+}).start();
