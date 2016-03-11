@@ -136,19 +136,22 @@ function moveHero(){
 		if (hero.y <= heroFloor){
 			hero.x += hero.velX;
 			hero.y += hero.velY;
+			hero.rotate(12);
 		}
 		else {
 			hero.y = heroFloor;
 			hero.velY = 0;
 		}
 }
+
 function moveHurdles(){
 	hurdles.forEach(function(hurdle){
-		if (hurdle.x > - hurdle.radius){
+		if (hurdle.x > 0 - hurdle.radius){
 			hurdle.x += hurdle.velX;
 		}
 		else {
 			canvas.removeChild(hurdle);
+			hurdles.shift();
 		}
 		checkCollisions(hurdle);
 		if(hurdle.x < hero.x - hero.radius && hurdle.x > hero.x - hero.radius - 10) points++;
