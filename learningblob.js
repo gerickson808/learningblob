@@ -13,7 +13,7 @@ var gameSpeed = 10;
 var hurdles = [];
 var points = 0;
 var colliding = false;
-var brain = new deepqlearn.Brain(2, 2);
+var brain = new deepqlearn.Brain(2, 2, myOpt);
 var fast,real, nearestHurdle, pointsToGet;
 
 document.getElementById('canvas').onmousedown = function(){
@@ -114,23 +114,20 @@ function generateHurdlesGenerator(){
 
 var generateHurdles = generateHurdlesGenerator();
 
-checkCollisions = function(objToCheck) {
-
-		if(objToCheck.x < w/2){				
+checkCollisions = function(objToCheck) {		
 		  var centerA = { x: hero.x, y: hero.y };
 		  var centerB = { x:objToCheck.x, y: objToCheck.y };
 		  var distance = Math.sqrt(((centerB.x-centerA.x)*(centerB.x-centerA.x) + (centerB.y-centerA.y)*(centerB.y-centerA.y)));
 
 		  if(distance < (hero.radius+objToCheck.radius)) {
-		      if (!colliding) pointsToGet = -1;
-		      // pointsToGet = -0.8;
+		      // if (!colliding) pointsToGet = -4;
+		      pointsToGet = -0.5;
 		      colliding = true;
 		      objToCheck.hit = true;
 
 		  } else{
 		  		colliding = false;
 		  }
-		}
 
 
 };
@@ -143,7 +140,7 @@ function jump(size){
 	if(hero.y < heroFloor) return;
 	// if(size === "big")hero.velY = -17;
 	// else hero.velY = -12;
-	hero.velY = -17;
+	hero.velY = -14.5;
 }
 
 function moveHero(){
@@ -169,7 +166,7 @@ function moveHurdles(){
 		}
 		if(hurdle.x < hero.x - hero.radius && hurdle.x > hero.x - hero.radius - 10 && hurdle.hit === false) {
 			points++;
-			pointsToGet = 1;
+			pointsToGet = 12;
 		}
 	});
 }
@@ -203,7 +200,7 @@ function getState() {
 function getReward(action, state) {
 	// body...
 	if(!pointsToGet) pointsToGet = 0;
-	if(state[0]===0 && !colliding) pointsToGet = 0.01;
+	if(state[0]===0 && !colliding) pointsToGet = 0.03;
 	var reward = pointsToGet;
 	pointsToGet = 0;
 	return reward;
@@ -260,7 +257,7 @@ function runBrain() {
 	var state = getState();
 	var action = brain.forward(state);
 	var reward = getReward(action, state);
-	console.log(reward);
+	console.log("state: ",state,"\naction: ",action,"\nreward: ",reward);
 	// console.log(state);
 	brain.backward(reward);
 
