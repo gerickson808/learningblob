@@ -13,6 +13,7 @@ var gameSpeed = 10;
 var hurdles = [];
 var points = 0;
 var colliding = false;
+var overHurdle = false;
 var brain = new deepqlearn.Brain(2, 2, myOpt);
 var fast,real, nearestHurdle, pointsToGet;
 
@@ -128,8 +129,19 @@ checkCollisions = function(objToCheck) {
 		  } else{
 		  		colliding = false;
 		  }
+};
 
-
+checkIfOverHurdle = function(hurdle){
+	if(colliding) return;
+	var heroCenter = hero.x;
+	var heroLeft = hero.x - hero.radius;
+	var heroRight = hero.x + hero.radius;
+	var hurdleCenter = hurdle.x;
+	var hurdleLeft = hurdle.x - hurdle.radius;
+	var hurdleRight = hurdle.x + hurdle.radius;
+	if ((heroLeft < hurdleRight && heroLeft > hurdleLeft) || (heroRight < hurdleRight && heroRight > hurdleLeft)){
+		overHurdle = true;
+	}else overHurdle = false;
 };
 
 function random(num){
@@ -191,6 +203,7 @@ function getState() {
 	var isJumping = hero.y < heroFloor ? 1 : 0;
 	leastDistance = leastDistance/w || w;
 	checkCollisions(nearestHurdle);
+	checkIfOverHurdle(nearestHurdle);
 
 	// return [isJumping, leastDistance, obsType];
 	return [isJumping, leastDistance];
@@ -200,7 +213,8 @@ function getState() {
 function getReward(action, state) {
 	// body...
 	if(!pointsToGet) pointsToGet = 0;
-	if(state[0]===0 && !colliding) pointsToGet = 0.03;
+	if(state[0]===0 && !colliding) pointsToGet = 0.05;
+	if(state[0]===1 && !overHurdle && !colliding) pointsToGet = -0.05;
 	var reward = pointsToGet;
 	pointsToGet = 0;
 	return reward;
@@ -210,12 +224,12 @@ function getReward(action, state) {
 function toggleLearning() {
  
     if (brain.learning) {
-        console.log('Learning turned off')
+        console.log('Learning turned off');
         brain.learning = false;
         brain.epsilon_test_time = 0.0;
     }
     else {
-        console.log('Learning turned on')
+        console.log('Learning turned on');
 
         brain.learning = true;
         brain.epsilon_test_time = 0.01;
