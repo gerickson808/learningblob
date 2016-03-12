@@ -11,6 +11,7 @@ var gravity = 1;
 var wind = 0;
 var gameSpeed = 10;
 var hurdles = [];
+var clouds = [];
 var points = 0;
 var colliding = false;
 var overHurdle = false;
@@ -105,7 +106,7 @@ function generateHurdlesGenerator(){
 	var frame = 0;
 	return function(){
 		frame++;
-		if(frame > 30){
+		if(frame > 50){
 			if(random(20) === 6){
 				createHurdle();
 				frame = 0;
@@ -117,6 +118,7 @@ function generateHurdlesGenerator(){
 var generateHurdles = generateHurdlesGenerator();
 
 checkCollisions = function(objToCheck) {		
+			if(!objToCheck) return;
 		  var centerA = { x: hero.x, y: hero.y };
 		  var centerB = { x:objToCheck.x, y: objToCheck.y };
 		  var distance = Math.sqrt(((centerB.x-centerA.x)*(centerB.x-centerA.x) + (centerB.y-centerA.y)*(centerB.y-centerA.y)));
@@ -133,7 +135,7 @@ checkCollisions = function(objToCheck) {
 };
 
 checkIfOverHurdle = function(hurdle){
-	if(colliding) return;
+	if(colliding || !hurdle) return;
 	var heroCenter = hero.x;
 	var heroLeft = hero.x - hero.radius;
 	var heroRight = hero.x + hero.radius;
@@ -160,7 +162,7 @@ function moveHero(){
 		if (hero.y <= heroFloor){
 			hero.x += hero.velX;
 			hero.y += hero.velY;
-			hero.rotate(11.3);
+			hero.rotate(12.5);
 		}
 		else {
 			hero.y = heroFloor;
@@ -259,6 +261,8 @@ function realTime(){
 		moveHero();
 		generateHurdles();
 		moveHurdles();
+		generateClouds();
+		moveClouds();
 		runBrain();
 	}).start();
 }
@@ -272,6 +276,8 @@ function fastLearning(){
 	moveHero();
 	generateHurdles();
 	moveHurdles();
+	generateClouds();
+	moveClouds();
 	runBrain();
 },0);
 }
@@ -280,7 +286,7 @@ function runBrain() {
 	var state = getState();
 	var action = brain.forward(state);
 	var reward = getReward(action, state);
-	console.log("state: ",state,"\naction: ",action,"\nreward: ",reward);
+	// console.log("state: ",state,"\naction: ",action,"\nreward: ",reward);
 	// console.log(state);
 	brain.backward(reward);
 

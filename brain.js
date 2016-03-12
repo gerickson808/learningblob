@@ -1,6 +1,6 @@
 var num_inputs = 2; // 9 eyes, each sees 3 numbers (wall, green, red thing proximity)
  var num_actions = 2; // 5 possible angles agent can turn
-var temporal_window = 100; // amount of temporal memory. 0 = agent lives in-the-moment :)
+var temporal_window = 20; // amount of temporal memory. 0 = agent lives in-the-moment :)
 var network_size = num_inputs*temporal_window + num_actions*temporal_window + num_inputs;
 
 // the value function network computes a value of taking any of the possible actions
@@ -10,12 +10,11 @@ var network_size = num_inputs*temporal_window + num_actions*temporal_window + nu
 var layer_defs = [];
 layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
 layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
-layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
 layer_defs.push({type:'regression', num_neurons:num_actions});
 
 // options for the Temporal Difference learner that trains the above net
 // by backpropping the temporal difference learning rule.
-var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.01};
+var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.02};
 
 var opt = {};
 opt.temporal_window = temporal_window;
@@ -32,4 +31,6 @@ opt.tdtrainer_options = tdtrainer_options;
 //////////////
 var myOpt = {};
 myOpt.random_action_distribution = [0.91,0.09];
-// myOpt.temporal_window = temporal_window;
+myOpt.temporal_window = temporal_window;
+opt.layer_defs = layer_defs;
+myOpt.td_trainer_options = tdtrainer_options;
