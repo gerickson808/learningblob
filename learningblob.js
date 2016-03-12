@@ -122,7 +122,7 @@ checkCollisions = function(objToCheck) {
 		  var distance = Math.sqrt(((centerB.x-centerA.x)*(centerB.x-centerA.x) + (centerB.y-centerA.y)*(centerB.y-centerA.y)));
 
 		  if(distance < (hero.radius+objToCheck.radius)) {
-		      if (!colliding) pointsToGet = -4;
+		      if (!colliding) pointsToGet = -1;
 		      // pointsToGet = -0.8;
 		      colliding = true;
 		      objToCheck.hit = true;
@@ -169,7 +169,7 @@ function moveHurdles(){
 		}
 		if(hurdle.x < hero.x - hero.radius && hurdle.x > hero.x - hero.radius - 10 && hurdle.hit === false) {
 			points++;
-			pointsToGet = 3;
+			pointsToGet = 1;
 		}
 	});
 }
@@ -203,8 +203,8 @@ function getState() {
 function getReward(action, state) {
 	// body...
 	if(!pointsToGet) pointsToGet = 0;
-	if(state[0]===0 && !colliding) pointsToGet = 0.10;
-	var reward = pointsToGet/10;
+	if(state[0]===0 && !colliding) pointsToGet = 0.01;
+	var reward = pointsToGet;
 	pointsToGet = 0;
 	return reward;
 	
@@ -245,6 +245,7 @@ function realTime(){
 
 function fastLearning(){
 	canvas.setLoop().stop();
+	clearInterval(fast);
 
 	fast = setInterval(function(){
 	applyGravity(gravity);
