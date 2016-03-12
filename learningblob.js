@@ -16,6 +16,7 @@ var colliding = false;
 var overHurdle = false;
 var brain = new deepqlearn.Brain(2, 2, myOpt);
 var fast,real, nearestHurdle, pointsToGet;
+var cleared = false;
 
 document.getElementById('canvas').onmousedown = function(){
   return false;
@@ -159,7 +160,7 @@ function moveHero(){
 		if (hero.y <= heroFloor){
 			hero.x += hero.velX;
 			hero.y += hero.velY;
-			hero.rotate(12);
+			hero.rotate(11.3);
 		}
 		else {
 			hero.y = heroFloor;
@@ -178,7 +179,7 @@ function moveHurdles(){
 		}
 		if(hurdle.x < hero.x - hero.radius && hurdle.x > hero.x - hero.radius - 10 && hurdle.hit === false) {
 			points++;
-			pointsToGet = 12;
+			cleared = true;
 		}
 	});
 }
@@ -214,9 +215,12 @@ function getReward(action, state) {
 	// body...
 	if(!pointsToGet) pointsToGet = 0;
 	if(state[0]===0 && !colliding) pointsToGet = 0.05;
-	if(state[0]===1 && !overHurdle && !colliding) pointsToGet = -0.05;
+	if(state[0]===1 && !overHurdle && !colliding) pointsToGet = -0.2;
+	if(state[0]===1 && overHurdle && !colliding) pointsToGet = 0.8;
+	// if(cleared) pointsToGet = 10;
 	var reward = pointsToGet;
 	pointsToGet = 0;
+	cleared = false;
 	return reward;
 	
 }
