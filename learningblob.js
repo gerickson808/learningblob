@@ -26,7 +26,7 @@ canvas = oCanvas.create({
 	background:'#3cf',
 	clearEachFrame: true,
 	drawEachFrame: true,
-	fps:60,
+	fps:120,
 	disableScrolling:true
 });
 
@@ -104,8 +104,8 @@ function generateHurdlesGenerator(){
 	var frame = 0;
 	return function(){
 		frame++;
-		if(frame > 50){
-			if(random(25) === 6){
+		if(frame > 30){
+			if(random(20) === 6){
 				createHurdle();
 				frame = 0;
 			}
@@ -239,6 +239,11 @@ function toggleLearning() {
 function saveBrain(){
 	var net = brain.value_net.toJSON();
 	console.log(JSON.stringify(net));
+}
+
+function loadBrain() {
+	var brainToLoad = eval("(" + document.getElementById('brains').value + ')');
+	brain.value_net.fromJSON(brainToLoad);
 }
 
 function realTime(){
