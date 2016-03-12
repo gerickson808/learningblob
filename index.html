@@ -1,22 +1,46 @@
 <html>
-	<head><title>Learning blob</title></head>
-	<body>
 
-		<div id="stuff" style="height:3em;width:10em;border:'2px solid black'"><button onclick="toggleLearning()">Toggle Learning</button><button onclick="realTime()">Realtime</button><button onclick="fastLearning()">Fast as shit</button>
-		<button onclick="saveBrain()">Console log that network, bruh</button></div>
-		<input id='brains'></input>
-		<button onclick="loadBrain()">Load Brain</button>
-		<canvas id="canvas" style="z-index:0"></canvas>
-		<div id="info"></div>
-	</body>
-	<!-- Libraries -->
-	<script type="text/javascript" src="./node_modules/convnetjs/build/convnet.js"></script>
-	<script type="text/javascript" src="./node_modules/convnetjs/build/deepqlearn.js"></script>
-	<script type="text/javascript" src="./node_modules/convnetjs/build/util.js"></script>
-	<script type="text/javascript" src="./node_modules/convnetjs/build/vis.js"></script>
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/ocanvas/2.8.3/ocanvas.min.js"></script>
+<head>
+    <title>Learning blob</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
 
-	<!-- Our JS -->
+<body>
+    <canvas id="canvas" style="z-index:0"></canvas>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <button class="btn btn-default" onclick="toggleLearning()">Toggle Learning</button>
+            </div>
+            <div class="form-group">
+                <button onclick="realTime()" class="btn btn-default">Realtime</button>
+            </div>
+            <div class="form-group">
+                <button onclick="fastLearning()" class="btn btn-default">Fast Forward</button>
+            </div>
+            <div class="form-group">
+                <button onclick="saveBrain()" class="btn btn-default">Save Brain</button>
+            </div>
+            <div class="form-group">
+                <button onclick="loadBrain()" class="btn btn-default">Load Brain</button>
+                <input type="text" rows="6" id='brains'></input>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div id="info"></div>
+        </div>
+        <div class="col-lg-3">
+            <canvas id="vis_canvas" width="350" height="150"></canvas>
+        </div>
+    </div>
+</body>
+<!-- Libraries -->
+<script type="text/javascript" src="./node_modules/convnetjs/build/convnet.js"></script>
+<script type="text/javascript" src="./node_modules/convnetjs/build/deepqlearn.js"></script>
+<script type="text/javascript" src="./node_modules/convnetjs/build/util.js"></script>
+<script type="text/javascript" src="./node_modules/convnetjs/build/vis.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/ocanvas/2.8.3/ocanvas.min.js"></script>
+<!-- Our JS -->
 	<script type="text/javascript" src="./brain.js"></script>
 	<script src="./clouds.js"></script>
 	<script src="./learningblob.js"></script>
