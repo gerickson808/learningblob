@@ -15,7 +15,8 @@ var points = 0;
 var colliding = false;
 var overHurdle = false;
 var brain = new deepqlearn.Brain(2, 2, myOpt);
-var fast, real, nearestHurdle, pointsToGet;
+var fast,real, nearestHurdle, pointsToGet;
+var cleared = false;
 
 var reward_graph = new cnnvis.Graph();
 
@@ -159,30 +160,32 @@ function jump(size) {
     hero.velY = -14.5;
 }
 
-function moveHero() {
-    if (hero.y <= heroFloor) {
-        hero.x += hero.velX;
-        hero.y += hero.velY;
-        hero.rotate(12);
-    } else {
-        hero.y = heroFloor;
-        hero.velY = 0;
-    }
+function moveHero(){
+		if (hero.y <= heroFloor){
+			hero.x += hero.velX;
+			hero.y += hero.velY;
+			hero.rotate(11.3);
+		}
+		else {
+			hero.y = heroFloor;
+			hero.velY = 0;
+		}
 }
 
-function moveHurdles() {
-    hurdles.forEach(function(hurdle) {
-        if (hurdle.x > 0 - hurdle.radius) {
-            hurdle.x += hurdle.velX;
-        } else {
-            canvas.removeChild(hurdle);
-            hurdles.shift();
-        }
-        if (hurdle.x < hero.x - hero.radius && hurdle.x > hero.x - hero.radius - 10 && hurdle.hit === false) {
-            points++;
-            pointsToGet = 12;
-        }
-    });
+function moveHurdles(){
+	hurdles.forEach(function(hurdle){
+		if (hurdle.x > 0 - hurdle.radius){
+			hurdle.x += hurdle.velX;
+		}
+		else {
+			canvas.removeChild(hurdle);
+			hurdles.shift();
+		}
+		if(hurdle.x < hero.x - hero.radius && hurdle.x > hero.x - hero.radius - 10 && hurdle.hit === false) {
+			points++;
+			cleared = true;
+		}
+	});
 }
 
 function applyGravity(grav) {
@@ -213,14 +216,16 @@ function getState() {
 }
 
 function getReward(action, state) {
-    // body...
-    if (!pointsToGet) pointsToGet = 0;
-    if (state[0] === 0 && !colliding) pointsToGet = 0.05;
-    if (state[0] === 1 && !overHurdle && !colliding) pointsToGet = -0.05;
-    var reward = pointsToGet;
-    pointsToGet = 0;
-    return reward;
-
+	// body...
+	if(!pointsToGet) pointsToGet = 0;
+	if(state[0]===0 && !colliding) pointsToGet = 0.05;
+	if(state[0]===1 && !overHurdle && !colliding) pointsToGet = -0.2;
+	if(state[0]===1 && overHurdle && !colliding) pointsToGet = 0.8;
+	// if(cleared) pointsToGet = 10;
+	var reward = pointsToGet;
+	pointsToGet = 0;
+	cleared = false;
+	return reward;
 }
 
 function toggleLearning() {
