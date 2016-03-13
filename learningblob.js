@@ -22,6 +22,17 @@ var cleared = false;
 var reward_graph = new cnnvis.Graph();
 
 
+
+function loadNinja() {
+    brain.value_net.fromJSON(ninjabrain);
+}
+function loadSmart() {
+    brain.value_net.fromJSON(smartbrain);
+}
+function loadSimple() {
+    brain.value_net.fromJSON(simplebrain);
+}
+
 document.getElementById('canvas').onmousedown = function() {
     return false;
 };
@@ -349,12 +360,6 @@ function draw_stats() {
 
 
 
-
-
-// canvas.setLoop(function(){
-// 	applyGravity(gravity);
-// 	moveHero();
-// 	generateHurdles();
-// 	moveHurdles();
-// 	runBrain();
-// }).start();
+var simplebrain = {"layers":[{"out_depth":6,"out_sx":1,"out_sy":1,"layer_type":"input"},{"out_depth":2,"out_sx":1,"out_sy":1,"layer_type":"fc","num_inputs":6,"l1_decay_mul":0,"l2_decay_mul":1,"filters":[{"sx":1,"sy":1,"depth":6,"w":{"0":-0.15557077947773656,"1":0.11508388364665728,"2":-0.12770636137304417,"3":0.42661694358298996,"4":0.08971893794908133,"5":0.08243771465497225}},{"sx":1,"sy":1,"depth":6,"w":{"0":-0.18054901273566704,"1":-0.2790649729335071,"2":-0.09398237362797197,"3":0.6498568943507281,"4":0.16249425550416813,"5":0.16474520778039883}}],"biases":{"sx":1,"sy":1,"depth":2,"w":{"0":0.11888617376414806,"1":-0.018588838935209438}}},{"out_depth":2,"out_sx":1,"out_sy":1,"layer_type":"regression","num_inputs":2}]};
+var smartbrain = {"layers":[{"out_depth":6,"out_sx":1,"out_sy":1,"layer_type":"input"},{"out_depth":2,"out_sx":1,"out_sy":1,"layer_type":"fc","num_inputs":6,"l1_decay_mul":0,"l2_decay_mul":1,"filters":[{"sx":1,"sy":1,"depth":6,"w":{"0":-0.3112598636012905,"1":0.4285562269992439,"2":0.08318044170873752,"3":-0.040108572834743166,"4":0.004598174935621053,"5":0.014488128997299914}},{"sx":1,"sy":1,"depth":6,"w":{"0":-0.21688240338879128,"1":-0.43257451890866017,"2":-0.0030226106445853506,"3":0.3329125727776427,"4":0.04588569057706903,"5":-0.006983542572444009}}],"biases":{"sx":1,"sy":1,"depth":2,"w":{"0":-0.15844653104175807,"1":-0.18196947704521538}}},{"out_depth":2,"out_sx":1,"out_sy":1,"layer_type":"regression","num_inputs":2}]};
+var ninjabrain = {"layers":[{"out_depth":6,"out_sx":1,"out_sy":1,"layer_type":"input"},{"out_depth":2,"out_sx":1,"out_sy":1,"layer_type":"fc","num_inputs":6,"l1_decay_mul":0,"l2_decay_mul":1,"filters":[{"sx":1,"sy":1,"depth":6,"w":{"0":-0.274687125761134,"1":0.33698267253778713,"2":0.11035176797066769,"3":-0.12540480901180634,"4":0.008777248980376457,"5":0.017844310903739804}},{"sx":1,"sy":1,"depth":6,"w":{"0":-0.18373299586845926,"1":-0.4349861340129164,"2":0.027501721151774974,"3":0.3290130935957458,"4":0.04287485009924651,"5":0.0013962164913292436}}],"biases":{"sx":1,"sy":1,"depth":2,"w":{"0":-0.15467030298522969,"1":-0.1792665633743678}}},{"out_depth":2,"out_sx":1,"out_sy":1,"layer_type":"regression","num_inputs":2}]};
