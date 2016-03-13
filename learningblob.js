@@ -103,6 +103,7 @@ function createHurdle(){
 function generateHurdlesGenerator(){
 	var frame = 0;
 	return function(){
+		if(colliding) return;
 		frame++;
 		if(frame > 50){
 			if(random(25) === 6){
@@ -122,12 +123,14 @@ checkCollisions = function(objToCheck) {
 
 		  if(distance < (hero.radius+objToCheck.radius)) {
 		      // if (!colliding) pointsToGet = -4;
-		      pointsToGet = -0.5;
+		      pointsToGet += -1;
 		      colliding = true;
 		      objToCheck.hit = true;
 
 		  } else{
 		  		colliding = false;
+		  		if (hero.y === heroFloor) pointsToGet += 100/distance;
+		  		else pointsToGet += -100/distance;
 		  }
 };
 
@@ -137,7 +140,7 @@ checkIfOverHurdle = function(hurdle){
 	var heroLeft = hero.x - hero.radius;
 	var heroRight = hero.x + hero.radius;
 	var hurdleCenter = hurdle.x;
-	var hurdleLeft = hurdle.x - hurdle.radius;
+	var hurdleLeft = hurdle.x - (3/2 * hurdle.radius);
 	var hurdleRight = hurdle.x + hurdle.radius;
 	if ((heroLeft < hurdleRight && heroLeft > hurdleLeft) || (heroRight < hurdleRight && heroRight > hurdleLeft)){
 		overHurdle = true;
@@ -149,16 +152,19 @@ function random(num){
 }
 
 function jump(size){
-	if(hero.y < heroFloor) return;
+	if(hero.y < heroFloor && !colliding) return;
+	if(colliding) colliding = !colliding;
 	// if(size === "big")hero.velY = -17;
 	// else hero.velY = -12;
 	hero.velY = -14.5;
 }
 
 function moveHero(){
+
+		if(colliding) hero.y -=3;
 		if (hero.y <= heroFloor){
-			hero.x += hero.velX;
 			hero.y += hero.velY;
+			hero.x += hero.velX;
 			hero.rotate(12);
 		}
 		else {
@@ -168,7 +174,12 @@ function moveHero(){
 }
 
 function moveHurdles(){
+
 	hurdles.forEach(function(hurdle){
+		if(colliding){
+			if(nearestHurdle.x > hero.x) hurdle.x += 2;
+			return;
+		}
 		if (hurdle.x > 0 - hurdle.radius){
 			hurdle.x += hurdle.velX;
 		}
@@ -178,7 +189,8 @@ function moveHurdles(){
 		}
 		if(hurdle.x < hero.x - hero.radius && hurdle.x > hero.x - hero.radius - 10 && hurdle.hit === false) {
 			points++;
-			pointsToGet = 12;
+			pointsToGet = 10;
+			console.log("cleared");
 		}
 	});
 }
@@ -190,9 +202,14 @@ function applyGravity(grav){
 function getState() {
 	// isJumping, distnace from next obstacle, obstacle type
 		var leastDistance = w,
+				leastDistanceLeft = w/3,
 				obsType;
 	hurdles.forEach(function(hurdle){
 		var distance = hurdle.x - hero.x;
+		if(hurdle.x < hero.x && distance * -1 < leastDistanceLeft) {
+			leastDistanceLeft = distance;
+			previousHurdle = hurdle;
+		}
 		if(hurdle.x>hero.x && distance < leastDistance){
 			leastDistance = distance;
 			nearestHurdle = hurdle;
@@ -202,8 +219,8 @@ function getState() {
 	// else obsType = 0;
 	var isJumping = hero.y < heroFloor ? 1 : 0;
 	leastDistance = leastDistance/w || w;
-	checkCollisions(nearestHurdle);
-	checkIfOverHurdle(nearestHurdle);
+	if (nearestHurdle) checkCollisions(nearestHurdle);
+	if (nearestHurdle) checkIfOverHurdle(nearestHurdle);
 
 	// return [isJumping, leastDistance, obsType];
 	return [isJumping, leastDistance];
@@ -213,8 +230,9 @@ function getState() {
 function getReward(action, state) {
 	// body...
 	if(!pointsToGet) pointsToGet = 0;
-	if(state[0]===0 && !colliding) pointsToGet = 0.05;
-	if(state[0]===1 && !overHurdle && !colliding) pointsToGet = -0.05;
+	// if(state[0]===0 && !colliding) pointsToGet = 0.05;
+	// if(state[0]===1 && !overHurdle && !colliding) pointsToGet = -0.05;
+	if (state[0]===1 && overHurdle && !colliding) pointsToGet += 1;
 	var reward = pointsToGet;
 	pointsToGet = 0;
 	return reward;
@@ -273,6 +291,7 @@ function runBrain() {
 	var reward = getReward(action, state);
 	console.log("state: ",state,"\naction: ",action,"\nreward: ",reward);
 	// console.log(state);
+	// if(reward > 1) console.log(reward);
 	brain.backward(reward);
 
 	// do action
