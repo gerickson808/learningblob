@@ -105,14 +105,31 @@ function createHurdle() {
     hurdle.zIndex = "back";
 }
 
+// start with easy settings
+var frameCutoff = 50;
+var hurdleProb = 30;
 
+function setEasy() {
+    frameCutoff = 50;
+    hurdleProb = 30;
+}
+
+function setMedium() {
+    frameCutoff = 40;
+    hurdleProb = 20;
+}
+
+function setHard(argument) {
+    frameCutoff = 30;
+    hurdleProb = 10;
+}
 
 function generateHurdlesGenerator() {
     var frame = 0;
     return function() {
         frame++;
-        if (frame > 50) {
-            if (random(25) === 6) {
+        if (frame > frameCutoff) {
+            if (random(hurdleProb) === 6) {
                 createHurdle();
                 frame = 0;
             }
