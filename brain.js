@@ -32,5 +32,5 @@ opt.tdtrainer_options = tdtrainer_options;
 
 //////////////
 var myOpt = {};
-myOpt.random_action_distribution = [0.95,0.05];
+// myOpt.random_action_distribution = [0.95,0.05];
 myOpt.temporal_window = 20;

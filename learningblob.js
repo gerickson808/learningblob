@@ -14,7 +14,7 @@ var hurdles = [];
 var points = 0;
 var colliding = false;
 var overHurdle = false;
-var brain = new deepqlearn.Brain(2, 2, myOpt);
+var brains = [new deepqlearn.Brain(2, 2, myOpt), new deepqlearn.Brain(2, 2, myOpt), new deepqlearn.Brain(2, 2, myOpt)];
 var fast,real, nearestHurdle, pointsToGet;
 
 document.getElementById('canvas').onmousedown = function(){
@@ -129,7 +129,14 @@ checkCollisions = function(objToCheck) {
 
 		  } else{
 		  		colliding = false;
-		  		if (hero.y === heroFloor) pointsToGet += 100/distance;
+		  		if (hero.y === heroFloor){
+		  			if((objToCheck.x - hero.x)/w > 0.05){
+		  				pointsToGet += 100/distance;
+		  			}
+		  			else{ 
+		  				pointsToGet += -100/distance;
+		  			}
+		  		}
 		  		else pointsToGet += -100/distance;
 		  }
 };
@@ -240,7 +247,7 @@ function getReward(action, state) {
 }
 
 function toggleLearning() {
- 
+ brains.forEach(function(brain){
     if (brain.learning) {
         console.log('Learning turned off');
         brain.learning = false;
@@ -252,6 +259,7 @@ function toggleLearning() {
         brain.learning = true;
         brain.epsilon_test_time = 0.01;
     }
+  });
 }
 
 function saveBrain(){
@@ -287,13 +295,18 @@ function fastLearning(){
 
 function runBrain() {
 	var state = getState();
-	var action = brain.forward(state);
+	actions = [];
+	for(var i = 0;i<brains.length;i++) actions[i] = brains[i].forward(state);
 	var reward = getReward(action, state);
-	console.log("state: ",state,"\naction: ",action,"\nreward: ",reward);
+	// console.log("state: ",state,"\naction: ",action,"\nreward: ",reward);
 	// console.log(state);
 	// if(reward > 1) console.log(reward);
-	brain.backward(reward);
-
+	var action = 0;
+	for(var j = 0;j<brains.length;j++){
+		brains[j].backward(reward);
+		action += actions[j];
+		// console.log(""+j+" ",actions[j]);
+	}
 	// do action
 	// switch (action){
 	// 	case 1:
@@ -302,9 +315,9 @@ function runBrain() {
 	// 	case 2:
 	// 		jump("small");
 	// 		break;
-	if (action === 1 ) jump();
+	if (action >= 2 ) jump();
 	
-	brain.visSelf(document.getElementById('info'));
+	brains.forEach(function(brain){brain.visSelf(document.getElementById('info'));});
 }
 
 // canvas.setLoop(function(){
